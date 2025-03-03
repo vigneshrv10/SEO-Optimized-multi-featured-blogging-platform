@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit post - <%= post.title %></title>
+    <link rel="stylesheet" href="/css/home-style.css">
+    <link rel="stylesheet" href="/css/compose-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .edit-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1F2937;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4B5563;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        .file-input-group {
+            margin-top: 1rem;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #4F46E5;
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-input-label:hover {
+            background: #4338CA;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-left: 1rem;
+            color: #6B7280;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #4338CA;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: #EF4444;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background: #DC2626;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .error-message {
+            color: #DC2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            background: #059669;
+            color: white;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/home">BlogVerse</a></div>
+        <div class="nav-items">
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <% if(user==="admin"){ %>
+                    <li><a href="/admin">Dashboard</a></li>
+                <% } else { %>
+                    <li><a href="/profile/<%=user %>">My profile</a></li>
+                <% } %>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="edit-container">
+            <h1 class="edit-title">Edit Post</h1>
+            <form id="editForm" action="/update/<%=post._id%>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <div class="form-group">
+                    <label class="form-label" for="postTitle">Title</label>
+                    <input type="text" id="postTitle" class="form-input" name="postTitle" value="<%=post.title%>" required>
+                    <div class="error-message" id="titleError">Title is required and must be at least 5 characters long</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="postBody">Content</label>
+                    <textarea id="postBody" class="form-input form-textarea" name="postBody" required><%=post.content%></textarea>
+                    <div class="error-message" id="contentError">Content is required and must be at least 50 characters long</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Featured Image</label>
+                    <% if(post.thumbnail) { %>
+                        <img src="/thumbnails/<%=post.thumbnail%>" alt="Current thumbnail" class="preview-image">
+                    <% } %>
+                    <div class="file-input-group">
+                        <label class="file-input-label">
+                            <i class="fas fa-upload"></i> Choose New Image
+                            <input type="file" class="file-input" name="image" accept="image/*" onchange="updateFileName(this)">
+                        </label>
+                        <span class="file-name" id="fileName"></span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="cancel-btn" onclick="confirmCancel()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Post updated successfully!
+        </div>
+    </main>
+
+    <script>
+        function validateForm() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postBody').value;
+            const titleError = document.getElementById('titleError');
+            const contentError = document.getElementById('contentError');
+            let isValid = true;
+
+            // Validate title
+            if (title.length < 5) {
+                titleError.style.display = 'block';
+                isValid = false;
+            } else {
+                titleError.style.display = 'none';
+            }
+
+            // Validate content
+            if (content.length < 50) {
+                contentError.style.display = 'block';
+                isValid = false;
+            } else {
+                contentError.style.display = 'none';
+            }
+
+            if (isValid) {
+                showSuccessMessage();
+            }
+
+            return isValid;
+        }
+
+        function updateFileName(input) {
+            const fileName = input.files[0]?.name;
+            document.getElementById('fileName').textContent = fileName || '';
+        }
+
+        function confirmCancel() {
+            if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
+                window.location.href = '/posts/<%=post._id%>';
+            }
+        }
+
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize file name if there's a current thumbnail
+        window.onload = function() {
+            <% if(post.thumbnail) { %>
+                document.getElementById('fileName').textContent = '<%=post.thumbnail%>';
+            <% } %>
+        }
+    </script>
+</body>
+</html>

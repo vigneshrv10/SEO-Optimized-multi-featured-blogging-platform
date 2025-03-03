@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogVerse - Login or Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #4895ef;
+            --secondary: #f72585;
+            --accent: #7209b7;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f94144;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('/images/pattern.svg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-col1 {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-col1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: 0;
+        }
+        
+        .login-col1 h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-col1 img {
+            max-width: 80%;
+            height: auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-col2 {
+            flex: 1.2;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+        
+        .s-text {
+            text-align: right;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+        
+        .s-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .s-btn:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .reg-section {
+            margin-bottom: 2rem;
+        }
+        
+        .reg-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+        
+        .reg-section h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-top: 0;
+        }
+        
+        .form-container {
+            max-width: 400px;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-container label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+        }
+        
+        .form-container input {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .form-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+        
+        .lg-btn {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .lg-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-to-home {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 90%;
+            }
+            
+            .login-col1 {
+                padding: 2rem 1rem;
+            }
+            
+            .login-col2 {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="login-container">
+            <div class="login-col1">
+                <h1>BlogVerse</h1>
+                <img src="images/blog-vector-art.png" alt="Blog illustration">
+            </div>
+            <div class="login-col2">
+                <a href="/" class="back-to-home">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+                
+                <div id="register">
+                    <p class="s-text">Already have an account?
+                        <button class="s-btn" onclick="login()">Sign in</button>
+                    </p>
+                    <div class="reg-section">
+                        <h1>Welcome to BlogVerse!</h1>
+                        <h2>Register your account</h2>
+                    </div>
+                    <div class="form-container">
+                        <form action="/signup" method="post">
+                            <label for="reg-name">Name</label>
+                            <input type="text" id="reg-name" name="name" required placeholder="Enter your name">
+                            
+                            <label for="reg-email">Email</label>
+                            <input type="email" id="reg-email" name="email" required placeholder="Enter your email">
+                            
+                            <label for="reg-password">Password</label>
+                            <input type="password" id="reg-password" name="password" required placeholder="Create a password">
+                            
+                            <button type="submit" class="lg-btn">
+                                Register <i class="fas fa-user-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="login" style="display: none;">
+                    <p class="s-text">Don't have an account?
+                        <button class="s-btn" onclick="register()">Sign Up</button>
+                    </p>
+                    <div class="reg-section">
+                        <h1>Welcome Back!</h1>
+                        <h2>Login to your account</h2>
+                    </div>
+                    <div class="form-container login-form">
+                        <form action="/login" method="post">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" name="email" required placeholder="Enter your email">
+                            
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" name="password" required placeholder="Enter your password">
+                            
+                            <button type="submit" class="lg-btn">
+                                Login <i class="fas fa-sign-in-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        function login() {
+            document.getElementById("register").style.display = "none";
+            document.getElementById("login").style.display = "block";
+        }
+        
+        function register() {
+            document.getElementById("register").style.display = "block";
+            document.getElementById("login").style.display = "none";
+        }
+    </script>
+</body>
+</html>

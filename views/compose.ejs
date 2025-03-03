@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post - BlogVerse</title>
+    <link rel="stylesheet" href="css/home-style.css">
+    <link rel="stylesheet" href="css/compose-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .highlighted-word {
+            text-decoration: wavy underline red;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header i {
+            color: #EF4444;
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .modal-header h2 {
+            color: #1F2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+            color: #4B5563;
+        }
+
+        .vulgar-words-list {
+            background-color: #FEF2F2;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .confirm-btn {
+            background-color: #EF4444;
+            color: white;
+            border: none;
+        }
+
+        .confirm-btn:hover {
+            background-color: #DC2626;
+        }
+
+        .cancel-btn {
+            background-color: #F3F4F6;
+            color: #374151;
+            border: 1px solid #E5E7EB;
+        }
+
+        .cancel-btn:hover {
+            background-color: #E5E7EB;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .post-textarea form {
+            position: relative;
+        }
+
+        .word-warning {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background-color: #FEF2F2;
+            color: #991B1B;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: none;
+        }
+
+        .submit-button {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .submit-button input[type="submit"],
+        .submit-button input[type="reset"] {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .submit-button input[type="submit"] {
+            background-color: #4F46E5;
+            color: white;
+        }
+
+        .submit-button input[type="submit"]:hover {
+            background-color: #4338CA;
+        }
+
+        .submit-button input[type="reset"] {
+            background-color: #EF4444;
+            color: white;
+        }
+
+        .submit-button input[type="reset"]:hover {
+            background-color: #DC2626;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .post-title {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .generate-btn {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .generate-btn:hover {
+            background-color: #4338CA;
+        }
+
+        .generate-btn:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/home">BlogVerse</a></div>
+        <div class="nav-items">
+            <ul>
+                <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+                <% if(user==="admin"){ %>
+                    <li><a href="/admin"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <% } else { %>
+                    <li><a href="/profile/<%=user %>"><i class="fas fa-user"></i> My Profile</a></li>
+                <% } %>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="comp-title-container">
+            <h1 class="title">Create New Post</h1>
+        </div>
+        <div class="post-textarea">
+            <div class="word-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Potentially inappropriate words detected
+            </div>
+            <form action="/compose" method="post" enctype="multipart/form-data" id="postForm">
+                <p class="post-title">
+                    <input type="text" placeholder="Title" name="postTitle" id="postTitle" required>
+                    <button type="button" id="generateContentBtn" class="generate-btn">
+                        <i class="fas fa-magic"></i> Generate Content
+                    </button>
+                </p>
+                <p class="post-content">
+                    <textarea cols="30" rows="20" name="postBody" id="postBody" required></textarea>
+                </p>
+                <p>
+                    <input type="file" class="custom-file-input" name="image" accept="image/*">
+                </p>
+                <p class="submit-button">
+                    <input type="submit" value="Publish">
+                    <input type="reset" value="Discard">
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <div class="confirmation-modal" id="vulgarWordsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Content Warning</h2>
+            </div>
+            <div class="modal-body">
+                <p>Your post contains potentially inappropriate words:</p>
+                <div class="vulgar-words-list" id="vulgarWordsList"></div>
+                <p>Are you sure you want to publish this post?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Edit Post
+                </button>
+                <button class="modal-btn confirm-btn" onclick="confirmPublish()">
+                    <i class="fas fa-check"></i> Publish Anyway
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generated Content Modal -->
+    <div class="confirmation-modal" id="generatedContentModal">
+        <div class="modal-content" style="max-width: 700px; width: 90%;">
+            <div class="modal-header">
+                <i class="fas fa-magic"></i>
+                <h2>Generated Content</h2>
+            </div>
+            <div class="modal-body">
+                <p>We've generated content based on your title. Would you like to use this content?</p>
+                <div id="generatedContentPreview" style="max-height: 300px; overflow-y: auto; padding: 1rem; background-color: #f9fafb; border-radius: 0.375rem; margin: 1rem 0; white-space: pre-wrap;"></div>
+                <div id="generatingLoader" style="text-align: center; padding: 2rem; display: none;">
+                    <div class="spinner" style="border: 4px solid rgba(0, 0, 0, 0.1); width: 36px; height: 36px; border-radius: 50%; border-left-color: #4F46E5; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    <p style="margin-top: 1rem; color: #4B5563;">Generating content...</p>
+                </div>
+                <div id="generationError" style="display: none; color: #DC2626; background-color: #FEF2F2; padding: 1rem; border-radius: 0.375rem; margin: 1rem 0;"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closeGeneratedContentModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="modal-btn confirm-btn" id="useGeneratedContentBtn" style="background-color: #4F46E5;">
+                    <i class="fas fa-check"></i> Use This Content
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publish Confirmation Modal -->
+    <div class="confirmation-modal" id="publishConfirmationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-check-circle" style="color: #10B981;"></i>
+                <h2>Confirm Publication</h2>
+            </div>
+            <div class="modal-body">
+                <p>Your blog post is ready to be published. Would you like to publish it now?</p>
+                <div style="background-color: #F3F4F6; padding: 1rem; border-radius: 0.375rem; margin: 1rem 0;">
+                    <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+                    <p><strong>Content:</strong> <span id="confirmContentPreview"></span>...</p>
+                    <p><strong>Image:</strong> <span id="confirmImage"></span></p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closePublishConfirmationModal()">
+                    <i class="fas fa-edit"></i> Edit More
+                </button>
+                <button class="modal-btn confirm-btn" onclick="confirmFinalPublish()" style="background-color: #10B981;">
+                    <i class="fas fa-paper-plane"></i> Publish Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // List of vulgar words to check against (this is a small sample, you should maintain a more comprehensive list)
+        const vulgarWords = [
+            'damn', 'hell', 'ass', 'fuck', 'shit', 'bastard', 'bitch', 'crap', 'piss',
+            // Add more words to the list as needed
+        ];
+
+        const postForm = document.getElementById('postForm');
+        const postTitle = document.getElementById('postTitle');
+        const postBody = document.getElementById('postBody');
+        const modal = document.getElementById('vulgarWordsModal');
+        const vulgarWordsList = document.getElementById('vulgarWordsList');
+        const wordWarning = document.querySelector('.word-warning');
+
+        let foundVulgarWords = [];
+
+        function checkForVulgarWords(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            return vulgarWords.filter(vulgarWord => 
+                words.some(word => word.includes(vulgarWord))
+            );
+        }
+
+        function highlightVulgarWords(element) {
+            let text = element.value;
+            vulgarWords.forEach(word => {
+                const regex = new RegExp(word, 'gi');
+                text = text.replace(regex, match => `<span class="highlighted-word">${match}</span>`);
+            });
+            return text;
+        }
+
+        function showWarning() {
+            wordWarning.style.display = 'block';
+        }
+
+        function hideWarning() {
+            wordWarning.style.display = 'none';
+        }
+
+        postForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titleVulgarWords = checkForVulgarWords(postTitle.value);
+            const bodyVulgarWords = checkForVulgarWords(postBody.value);
+            foundVulgarWords = [...new Set([...titleVulgarWords, ...bodyVulgarWords])];
+
+            if (foundVulgarWords.length > 0) {
+                vulgarWordsList.textContent = foundVulgarWords.join(', ');
+                modal.style.display = 'block';
+            } else {
+                // Show publish confirmation instead of submitting directly
+                showPublishConfirmation();
+            }
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function confirmPublish() {
+            modal.style.display = 'none';
+            showPublishConfirmation();
+        }
+
+        // Real-time checking
+        [postTitle, postBody].forEach(element => {
+            element.addEventListener('input', function() {
+                const vulgarWords = checkForVulgarWords(this.value);
+                if (vulgarWords.length > 0) {
+                    showWarning();
+                } else {
+                    hideWarning();
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Prevent accidental navigation
+        window.addEventListener('beforeunload', function(e) {
+            if (postTitle.value || postBody.value) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Generated Content Functionality
+        const generateContentBtn = document.getElementById('generateContentBtn');
+        const generatedContentModal = document.getElementById('generatedContentModal');
+        const generatedContentPreview = document.getElementById('generatedContentPreview');
+        const useGeneratedContentBtn = document.getElementById('useGeneratedContentBtn');
+        const generatingLoader = document.getElementById('generatingLoader');
+        const generationError = document.getElementById('generationError');
+
+        generateContentBtn.addEventListener('click', async function() {
+            const title = postTitle.value.trim();
+            
+            if (!title) {
+                alert('Please enter a title first');
+                return;
+            }
+            
+            // Show modal with loader
+            generatedContentModal.style.display = 'block';
+            generatedContentPreview.style.display = 'none';
+            generatingLoader.style.display = 'block';
+            generationError.style.display = 'none';
+            useGeneratedContentBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/generate-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title }),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.content) {
+                    // Show generated content
+                    generatedContentPreview.textContent = data.content;
+                    generatedContentPreview.style.display = 'block';
+                    useGeneratedContentBtn.disabled = false;
+                } else {
+                    throw new Error(data.error || 'Failed to generate content');
+                }
+            } catch (error) {
+                console.error('Error generating content:', error);
+                generationError.textContent = error.message || 'An error occurred while generating content. Please try again.';
+                generationError.style.display = 'block';
+            } finally {
+                generatingLoader.style.display = 'none';
+            }
+        });
+
+        function closeGeneratedContentModal() {
+            generatedContentModal.style.display = 'none';
+        }
+
+        useGeneratedContentBtn.addEventListener('click', function() {
+            postBody.value = generatedContentPreview.textContent;
+            closeGeneratedContentModal();
+        });
+
+        // Close generated content modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === generatedContentModal) {
+                closeGeneratedContentModal();
+            }
+        });
+
+        // Publish confirmation functionality
+        const publishConfirmationModal = document.getElementById('publishConfirmationModal');
+        const confirmTitle = document.getElementById('confirmTitle');
+        const confirmContentPreview = document.getElementById('confirmContentPreview');
+        const confirmImage = document.getElementById('confirmImage');
+
+        function showPublishConfirmation() {
+            // Set confirmation details
+            confirmTitle.textContent = postTitle.value;
+            confirmContentPreview.textContent = postBody.value.substring(0, 100);
+            
+            const fileInput = document.querySelector('input[type="file"]');
+            confirmImage.textContent = fileInput.files.length > 0 ? 
+                fileInput.files[0].name : 'No image selected';
+            
+            // Show modal
+            publishConfirmationModal.style.display = 'block';
+        }
+
+        function closePublishConfirmationModal() {
+            publishConfirmationModal.style.display = 'none';
+        }
+
+        function confirmFinalPublish() {
+            postForm.submit();
+        }
+
+        // Close publish confirmation modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === publishConfirmationModal) {
+                closePublishConfirmationModal();
+            }
+        });
+    </script>
+</body>
+</html>

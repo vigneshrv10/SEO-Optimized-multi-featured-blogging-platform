@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=userdata.fullname%> | BlogVerse Profile</title>
+    <link rel="stylesheet" href="/css/home-style.css">
+    <link rel="stylesheet" href="/css/profile-style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-dark: #3a56d4;
+        --primary-light: #4895ef;
+        --secondary: #f72585;
+        --accent: #7209b7;
+        --success: #4cc9f0;
+        --warning: #f8961e;
+        --danger: #f94144;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-400: #ced4da;
+        --gray-500: #adb5bd;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+      }
+
+      body {
+        background-color: var(--gray-100);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color: var(--gray-800);
+      }
+
+      /* Navigation Bar */
+      nav {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        height: 70px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+      }
+
+      .nav-items ul {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-items ul li {
+        list-style: none;
+      }
+
+      .nav-items ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-items ul li a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Main Content */
+      main {
+        display: flex;
+        flex-direction: column;
+        max-width: 1200px;
+        margin: 2rem auto;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      /* Profile Section */
+      .profile-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        background-color: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        height: auto;
+      }
+
+      .profile-info-container {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        position: relative;
+        height: 100%;
+      }
+
+      .profile-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: url('/images/pattern.svg');
+        background-size: cover;
+        opacity: 0.2;
+      }
+
+      .dp {
+        position: relative;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        z-index: 1;
+      }
+
+      .dp img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .dp:hover img {
+        transform: scale(1.05);
+      }
+
+      .about {
+        text-align: center;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .username {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .bio {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      .web-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .web-link a:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+
+      .stats div {
+        text-align: center;
+      }
+
+      .stats div p:first-child {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 0.25rem;
+      }
+
+      .stats div p:last-child {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      /* Contact Section */
+      .contact-container {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-container h1 {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .contact-container h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, var(--primary), var(--accent));
+        border-radius: 3px;
+      }
+
+      .contact-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .contact-card {
+        background-color: var(--gray-100);
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .contact-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border-radius: 50%;
+        font-size: 1.25rem;
+      }
+
+      .contact-details {
+        flex: 1;
+      }
+
+      .contact-label {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-bottom: 0.25rem;
+      }
+
+      .contact-value {
+        font-weight: 500;
+        color: var(--gray-800);
+        word-break: break-word;
+      }
+
+      .contact-value a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .contact-value a:hover {
+        color: var(--accent);
+      }
+
+      .socials {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: var(--gray-200);
+        color: var(--gray-700);
+        border-radius: 50%;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .social-link:hover {
+        transform: translateY(-5px);
+      }
+
+      .social-link.facebook:hover {
+        background-color: #3b5998;
+        color: white;
+      }
+
+      .social-link.instagram:hover {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        color: white;
+      }
+
+      .social-link.twitter:hover {
+        background-color: #1da1f2;
+        color: white;
+      }
+
+      .social-link.whatsapp:hover {
+        background-color: #25d366;
+        color: white;
+      }
+
+      .edit-profile-container {
+        margin-top: 2rem;
+      }
+
+      .edit-profile-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .edit-profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Posts Section */
+      .posts-container {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        height: auto;
+        overflow: visible;
+      }
+
+      .posts-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .posts-header h1 {
+        font-size: 1.5rem;
+        color: var(--primary);
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .posts-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, var(--primary), var(--accent));
+        border-radius: 3px;
+      }
+
+      .recent-posts {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .recent-post-box {
+        background-color: var(--gray-100);
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        margin-bottom: 0;
+      }
+
+      .recent-post-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .link-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        text-decoration: none;
+        color: var(--gray-800);
+      }
+
+      .img-container {
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .recent-post-box:hover .img-container img {
+        transform: scale(1.05);
+      }
+
+      .post-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .days {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-bottom: 0.5rem;
+      }
+
+      .post-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .post-desc {
+        color: var(--gray-600);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .post-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+
+      .post-footer p {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray-700);
+      }
+
+      .post-footer p i {
+        color: var(--secondary);
+      }
+
+      .post-footer button {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .post-footer button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .no-posts {
+        text-align: center;
+        padding: 3rem;
+        color: var(--gray-500);
+      }
+
+      .no-posts i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .no-posts p {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .profile-container {
+          grid-template-columns: 1fr;
+        }
+        
+        .contact-info {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 0 1rem;
+        }
+        
+        .logo {
+          font-size: 1.5rem;
+        }
+        
+        .nav-items ul {
+          gap: 1rem;
+        }
+        
+        .recent-posts {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">BlogVerse</div>
+      <div class="nav-items">
+        <ul>
+          <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+          <% if(username==="admin"){ %>
+                <li><a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <% } else { %>
+                <li><a href="/profile/<%=username %>"><i class="fas fa-user"></i> My Profile</a></li>
+          <% } %>
+          <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <div class="profile-container">
+        <div class="profile-info-container">
+          <div class="profile-banner"></div>
+          <div class="dp" tabindex="0">
+            <img src="/thumbnails/<%if(userdata.dp){%><%=userdata.dp%><% } else { %>default-avatar.png<% } %>" alt="Profile Picture" />
+          </div>
+          <div class="about">
+            <p class="username"><%if(userdata.fullname) %><%= userdata.fullname %></p>
+            <p class="bio"><%= userdata.bio || "No bio available" %></p>
+            <% if(userdata.weblink) { %>
+              <div class="web-link">
+                <a href="http://<%=userdata.weblink %>" target="_blank">
+                  <i class="fas fa-link"></i> <%=userdata.weblink %>
+                </a>
+              </div>
+            <% } %>
+          </div>
+          <div class="stats">
+            <div>
+              <p>Posts</p>
+              <p id="pdisplay">0</p>
+            </div>
+            <div>
+              <p>Likes</p>
+              <p id="ldisplay">0</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="contact-container">
+          <h1>Contact Information</h1>
+          
+          <div class="contact-info">
+            <div class="contact-card">
+              <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-details">
+                <p class="contact-label">Email</p>
+                <p class="contact-value">
+                  <a href="mailto:<%=userdata.email %>"><%=userdata.email %></a>
+                </p>
+              </div>
+            </div>
+            
+            <div class="contact-card">
+              <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div class="contact-details">
+                <p class="contact-label">Phone</p>
+                <p class="contact-value"><%=userdata.phoneno || "Not provided" %></p>
+              </div>
+            </div>
+          </div>
+          
+          <h1>Social Media</h1>
+          <div class="socials">
+            <% if(userdata.facebook) { %>
+              <a href="http://www.facebook.com/<%=userdata.facebook%>" class="social-link facebook" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+            <% } %>
+            
+            <% if(userdata.instagram) { %>
+              <a href="http://www.instagram.com/<%=userdata.instagram%>" class="social-link instagram" target="_blank">
+                <i class="fab fa-instagram"></i>
+              </a>
+            <% } %>
+            
+            <% if(userdata.twitter) { %>
+              <a href="http://www.twitter.com/<%=userdata.twitter%>" class="social-link twitter" target="_blank">
+                <i class="fab fa-twitter"></i>
+              </a>
+            <% } %>
+            
+            <% if(userdata.whatsapp) { %>
+              <a href="http://wa.me/+91<%=userdata.whatsapp%>" class="social-link whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+            <% } %>
+          </div>
+          
+            <% if(username===userdata.username){ %>
+            <div class="edit-profile-container">
+              <a href="/editprofile/<%= username %>" class="edit-profile-btn">
+                <i class="fas fa-pencil-alt"></i> Edit Profile
+              </a>
+            </div>
+            <% } %>
+        </div>
+      </div>
+      
+      <div class="posts-container">
+        <div class="posts-header">
+          <h1>Published Posts</h1>
+        </div>
+        
+            <div class="recent-posts">
+                <% var likes=0 %>
+                 <% var postno=0 %>
+          <% if(posts && posts.length > 0) { %>
+            <% posts.reverse().forEach((post) => { %>
+                    <div class="recent-post-box">
+                <a href="/posts/<%= post._id %>" class="link-card">
+                    <div class="img-container">
+                    <img src="/thumbnails/<%= post.thumbnail %>" alt="<%= post.title %>" onerror="this.onerror=null; this.src='/images/default-image.png'">
+                        </div>
+                  
+                  <div class="post-content">
+                    <% var days=Math.round((date-post.date)/86400000)
+                    if(days===0){
+                       days=Math.round((date-post.date)/3600000)
+                       if(days===0){
+                        days=Math.round((date-post.date)/60000)
+                        if(days===0){
+                            days="Just now"
+                        }else if(days===1){
+                            days="1 minute ago"
+                        }else{
+                            days=days+" minutes ago"
+                        }
+                       }else if(days===1){
+                        days="1 hour ago"
+                       }else{
+                        days=days+" hours ago"
+                       }
+                    }
+                    else if(days===1){
+                        days="1 day ago"
+                    }
+                    else{
+                        days=days+" days ago"
+                    } %>
+                    
+                    <p class="days"><i class="far fa-clock"></i> <%= days %></p>
+                    <h2 class="post-title" title="<%= post.title %>"><%= post.title %></h2>
+                    <p class="post-desc"><%= post.content %></p>
+                    
+                    <div class="post-footer">
+                      <p><%= post.like %> <i class="fas fa-heart"></i></p>
+                      <button>Read More</button>
+                    </div>
+                    </div>
+                </a>
+                </div>
+               
+              <% likes=likes+post.like %>
+              <% postno=postno+1 %>
+                <% }) %>
+          <% } else { %>
+            <div class="no-posts">
+              <i class="fas fa-file-alt"></i>
+              <p>No posts published yet</p>
+              <a href="/home" class="edit-profile-btn">
+                <i class="fas fa-pencil-alt"></i> Create Your First Post
+              </a>
+            </div>
+          <% } %>
+        </div>
+        
+            <div style="display: none;">
+            <p id="lcount"><%=likes%></p>
+            <p id="pcount"><%=postno%></p>
+        </div>
+        </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Update stats counters
+        document.getElementById("ldisplay").innerHTML = document.getElementById("lcount").innerHTML;
+        document.getElementById("pdisplay").innerHTML = document.getElementById("pcount").innerHTML;
+        
+        // Profile image zoom effect
+        const profileImage = document.querySelector('.dp img');
+        if (profileImage) {
+          profileImage.addEventListener('click', function() {
+            this.classList.toggle('zoomed');
+            if (this.classList.contains('zoomed')) {
+              this.style.transform = 'scale(2)';
+              this.style.zIndex = '10';
+            } else {
+              this.style.transform = 'scale(1)';
+              this.style.zIndex = '1';
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
